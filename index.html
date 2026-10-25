@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#10110f">
+<title>HAZE · Cannabis tracker</title>
+<style>
+:root{color-scheme:dark;--bg:#10110f;--panel:#191b18;--panel2:#22241f;--text:#f0f0e8;--muted:#a1a396;--line:#34372f;--accent:#d6c18b;--red:#d98b83;--green:#a8c69a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+.app{max-width:760px;margin:auto;padding:20px 16px 42px}.top{display:flex;align-items:center;justify-content:space-between;margin:4px 0 22px}.brand{letter-spacing:.22em;font-size:12px;color:var(--accent);font-weight:750}.subbrand{font-size:12px;color:var(--muted);margin-top:3px}.pill{border:1px solid var(--line);padding:7px 10px;border-radius:999px;font-size:11px;color:var(--muted)}
+h1{font-size:30px;line-height:1.12;margin:0 0 8px;letter-spacing:-.04em}h2{font-size:17px;margin:0 0 14px}p{margin:0;color:var(--muted)}
+.hero{padding:22px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,#24251f,#151612 68%);margin-bottom:14px}.hero .eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.hero strong{font-size:42px;letter-spacing:-.05em;display:block;margin:6px 0 0}.hero strong small{font-size:16px;color:var(--muted);font-weight:500;letter-spacing:0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 0 22px}.stat{background:var(--panel);border:1px solid var(--line);padding:13px 11px;border-radius:15px;min-width:0}.stat span{display:block;color:var(--muted);font-size:11px}.stat b{display:block;font-size:20px;margin-top:5px;overflow-wrap:anywhere}.section{background:var(--panel);border:1px solid var(--line);border-radius:19px;padding:17px;margin:13px 0}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.section-head h2{margin:0}.btn{border:0;border-radius:12px;padding:12px 15px;font-weight:700;background:var(--accent);color:#171711;cursor:pointer;font-size:14px}.btn.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}.btn.danger{background:transparent;color:var(--red);border:1px solid #593a37}.btn.small{padding:8px 10px;font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.fieldgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}label{font-size:12px;color:var(--muted)}input,select,textarea{width:100%;min-width:0;border:1px solid var(--line);border-radius:11px;padding:12px;background:#11120f;color:var(--text);font:inherit}textarea{resize:vertical;min-height:74px}.formbuttons{display:flex;gap:8px;margin-top:14px}.hidden{display:none!important}.bars{display:flex;align-items:end;gap:7px;height:120px;padding-top:10px}.barcol{flex:1;min-width:0;text-align:center;display:flex;flex-direction:column;justify-content:end;height:100%;gap:6px}.bar{min-height:3px;border-radius:5px 5px 2px 2px;background:var(--accent);opacity:.9;width:100%}.barval{font-size:10px;color:var(--muted)}.barlabel{font-size:10px;color:var(--muted)}.loglist{display:flex;flex-direction:column;gap:9px}.log{display:flex;justify-content:space-between;gap:12px;padding:12px;background:var(--panel2);border-radius:13px}.logmain{min-width:0}.logtitle{font-weight:650}.logmeta{font-size:12px;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}.logright{text-align:right;white-space:nowrap}.logright b{display:block}.empty{padding:20px 8px;text-align:center;color:var(--muted);font-size:13px}.notice{font-size:12px;color:var(--muted);margin-top:12px}.trend{font-size:12px;color:var(--muted);margin-top:4px}.positive{color:var(--green)}.negative{color:var(--red)}.foot{font-size:11px;color:var(--muted);text-align:center;margin-top:22px}
+@media(max-width:390px){.app{padding:16px 12px 32px}.hero{padding:18px}.hero strong{font-size:36px}.stat{padding:11px 8px}.stat b{font-size:18px}.fieldgrid{gap:9px}}
+</style>
+</head>
+<body>
+<main class="app">
+<header class="top"><div><div class="brand">H A Z E</div><div class="subbrand">Personal cannabis-use journal</div></div><span class="pill">LOCAL TRACKER</span></header>
+<section class="hero">
+  <div class="eyebrow">Total logged · last 7 days</div>
+  <strong id="weekTotal">0 <small>g estimated</small></strong>
+  <p id="weekCaption">Your baseline starts with your first entry.</p>
+</section>
+<div class="stats">
+  <div class="stat"><span>Sessions · 7 days</span><b id="weekSessions">0</b></div>
+  <div class="stat"><span>Spend · 30 days</span><b id="monthSpend">0 kr</b></div>
+  <div class="stat"><span>Days logged · 7 days</span><b id="daysLogged">0/7</b></div>
+</div>
+<section class="section">
+  <div class="section-head"><h2>Log a session</h2><span class="pill">~ 30 seconds</span></div>
+  <form id="entryForm">
+    <div class="fieldgrid">
+      <div class="field"><label for="date">Date</label><input id="date" type="date" required></div>
+      <div class="field"><label for="time">Time</label><input id="time" type="time" required></div>
+      <div class="field"><label for="method">Method</label><select id="method"><option>Joint</option><option>Bong</option><option>Vape</option><option>Edible</option><option>Other</option></select></div>
+      <div class="field"><label for="amount">Estimated amount (grams)</label><input id="amount" type="number" min="0" max="100" step="0.01" placeholder="e.g. 0.25" required></div>
+      <div class="field"><label for="sessions">Sessions in this entry</label><input id="sessions" type="number" min="1" max="50" step="1" value="1" required></div>
+      <div class="field"><label for="cost">Cost (SEK, optional)</label><input id="cost" type="number" min="0" max="100000" step="1" placeholder="e.g. 80"></div>
+      <div class="field"><label for="reason">Main reason</label><select id="reason"><option value="">Choose (optional)</option><option>Relaxation</option><option>Sleep</option><option>Boredom</option><option>Stress</option><option>Social</option><option>Pain or discomfort</option><option>Habit</option><option>Other</option></select></div>
+      <div class="field"><label for="after">Afterward</label><select id="after"><option value="">Choose (optional)</option><option>Better</option><option>No change</option><option>Worse</option><option>Anxious</option><option>Sleepy</option><option>Foggy</option></select></div>
+      <div class="field full"><label for="notes">Notes (optional)</label><textarea id="notes" placeholder="Anything worth noticing?"></textarea></div>
+    </div>
+    <div class="formbuttons"><button class="btn" type="submit" id="saveBtn">Save session</button><button class="btn secondary hidden" type="button" id="cancelEdit">Cancel edit</button></div>
+    <div class="notice">Amounts are estimates, not a measure of THC dose. Potency varies a lot between products.</div>
+  </form>
+</section>
+<section class="section">
+  <div class="section-head"><h2>Usage trend</h2><select id="range" aria-label="Chart range" style="width:auto;padding:8px 10px;font-size:12px"><option value="7">7 days</option><option value="14">14 days</option><option value="30">30 days</option></select></div>
+  <div id="chart" class="bars"></div><div id="chartSummary" class="trend"></div>
+</section>
+<section class="section">
+  <div class="section-head"><h2>Recent entries</h2><span id="entryCount" class="pill">0 entries</span></div>
+  <div id="logs" class="loglist"><div class="empty">No entries yet. Add your first session above.</div></div>
+  <div class="actions" style="margin-top:13px"><button class="btn secondary small" id="exportBtn" type="button">Export CSV</button><button class="btn secondary small" id="backupBtn" type="button">Backup JSON</button><button class="btn secondary small" id="importBtn" type="button">Import backup</button><button class="btn danger small" id="clearBtn" type="button">Delete all data</button><input id="importFile" class="hidden" type="file" accept=".json,application/json"></div>
+  <div class="notice">Your entries are saved in this browser on this device. Clearing browser data or switching browsers can remove access, so export backups occasionally.</div>
+</section>
+<div class="foot">HAZE · Private by design · For personal awareness, not medical advice</div>
+</main>
+<script>
+(() => {
+ const KEY='haze_tracker_v1';
+ const $=id=>document.getElementById(id);
+ let entries=[]; let editing=null;
+ const todayISO=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+ const localTime=()=>{const d=new Date();return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`};
+ const parseDate=s=>new Date(s+'T12:00:00');
+ const dayDiff=(date)=>Math.floor((parseDate(todayISO())-parseDate(date))/86400000);
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const num=n=>Number(n||0);
+ const grams=n=>num(n).toLocaleString(undefined,{maximumFractionDigits:2});
+ const money=n=>num(n).toLocaleString(undefined,{maximumFractionDigits:0})+' kr';
+ function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'[]');entries=Array.isArray(v)?v:[]}catch{entries=[]}}
+ function save(){localStorage.setItem(KEY,JSON.stringify(entries));render()}
+ function inDays(e,n){const d=dayDiff(e.date);return d>=0&&d<n}
+ function total(list,field){return list.reduce((s,e)=>s+num(e[field]),0)}
+ function resetForm(){editing=null;$('entryForm').reset();$('date').value=todayISO();$('time').value=localTime();$('sessions').value=1;$('saveBtn').textContent='Save session';$('cancelEdit').classList.add('hidden')}
+ function render(){
+  const week=entries.filter(e=>inDays(e,7)), month=entries.filter(e=>inDays(e,30));
+  const g=total(week,'amount'), sess=total(week,'sessions'), days=new Set(week.map(e=>e.date)).size;
+  $('weekTotal').innerHTML=`${grams(g)} <small>g estimated</small>`;$('weekSessions').textContent=grams(sess);$('monthSpend').textContent=money(total(month,'cost'));$('daysLogged').textContent=`${days}/7`;
+  $('weekCaption').textContent=week.length?`${week.length} logged entr${week.length===1?'y':'ies'} this week. Compare periods to spot changes.`:'Your baseline starts with your first entry.';
+  renderChart();renderLogs();
+ }
+ function renderChart(){
+  const n=Number($('range').value), arr=[];
+  for(let i=n-1;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const iso=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+   const list=entries.filter(e=>e.date===iso);arr.push({iso,label:n===7?d.toLocaleDateString(undefined,{weekday:'short'}):d.toLocaleDateString(undefined,{month:'numeric',day:'numeric'}),g:total(list,'amount')})}
+  const max=Math.max(0.1,...arr.map(a=>a.g));
+  $('chart').innerHTML=arr.map(a=>`<div class="barcol" title="${esc(a.iso)}: ${grams(a.g)} g"><div class="barval">${a.g?grams(a.g):''}</div><div class="bar" style="height:${Math.max(a.g?4:2,a.g/max*76)}px;opacity:${a.g?1:.25}"></div><div class="barlabel">${esc(a.label)}</div></div>`).join('');
+  const current=arr.reduce((s,a)=>s+a.g,0), previousStart=n;
+  const prev=entries.filter(e=>{const d=dayDiff(e.date);return d>=n&&d<n*2});
+  const old=total(prev,'amount');
+  $('chartSummary').textContent=`${n}-day total: ${grams(current)} g · Previous ${n} days: ${grams(old)} g${old||current?' · Use trends as estimates, not a judgement.':''}`;
+ }
+ function renderLogs(){
+  const sorted=[...entries].sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
+  $('entryCount').textContent=`${entries.length} ${entries.length===1?'entry':'entries'}`;
+  if(!sorted.length){$('logs').innerHTML='<div class="empty">No entries yet. Add your first session above.</div>';return}
+  $('logs').innerHTML=sorted.slice(0,30).map(e=>`<article class="log"><div class="logmain"><div class="logtitle">${esc(e.method)} · ${grams(e.amount)} g</div><div class="logmeta">${esc(e.date)} at ${esc(e.time)} · ${grams(e.sessions)} session${num(e.sessions)===1?'':'s'}${e.reason?' · '+esc(e.reason):''}${e.after?' · '+esc(e.after):''}${e.notes?' · '+esc(e.notes):''}</div></div><div class="logright"><b>${e.cost!==''&&e.cost!=null?money(e.cost):'—'}</b><div class="actions" style="justify-content:flex-end;margin-top:7px"><button class="btn secondary small" data-edit="${esc(e.id)}" type="button">Edit</button><button class="btn danger small" data-delete="${esc(e.id)}" type="button">×</button></div></div></article>`).join('');
+ }
+ $('entryForm').addEventListener('submit',ev=>{
+  ev.preventDefault();
+  const entry={id:editing||String(Date.now())+'_'+Math.random().toString(36).slice(2,7),date:$('date').value,time:$('time').value,method:$('method').value,amount:num($('amount').value),sessions:Math.max(1,num($('sessions').value)),cost:$('cost').value===''?'':num($('cost').value),reason:$('reason').value,after:$('after').value,notes:$('notes').value.trim()};
+  if(!entry.date||!entry.time||entry.amount<0){alert('Please enter a valid date, time, and amount.');return}
+  if(editing) entries=entries.map(e=>e.id===editing?entry:e);else entries.push(entry);
+  resetForm();save();
+ });
+ $('cancelEdit').addEventListener('click',resetForm);
+ $('logs').addEventListener('click',ev=>{
+  const edit=ev.target.closest('[data-edit]')?.dataset.edit, del=ev.target.closest('[data-delete]')?.dataset.delete;
+  if(edit){const e=entries.find(x=>x.id===edit);if(!e)return;editing=edit;for(const k of ['date','time','method','amount','sessions','cost','reason','after','notes'])$(k).value=e[k]??'';$('saveBtn').textContent='Update entry';$('cancelEdit').classList.remove('hidden');$('entryForm').scrollIntoView({behavior:'smooth',block:'start'})}
+  if(del&&confirm('Delete this entry?')){entries=entries.filter(e=>e.id!==del);save()}
+ });
+ $('range').addEventListener('change',renderChart);
+ $('exportBtn').addEventListener('click',()=>{
+  const cols=['date','time','method','amount','sessions','cost','reason','after','notes'];
+  const csv=[cols.join(','),...entries.map(e=>cols.map(k=>'"'+String(e[k]??'').replace(/"/g,'""')+'"').join(','))].join('\r\n');
+  download('haze-entries.csv','text/csv;charset=utf-8',csv);
+ });
+ $('backupBtn').addEventListener('click',()=>download('haze-backup.json','application/json',JSON.stringify({version:1,exportedAt:new Date().toISOString(),entries},null,2)));
+ function download(name,type,content){const a=document.createElement('a');const u=URL.createObjectURL(new Blob([content],{type}));a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+ $('importBtn').addEventListener('click',()=>$('importFile').click());
+ $('importFile').addEventListener('change',async ev=>{const f=ev.target.files[0];if(!f)return;try{const data=JSON.parse(await f.text());const incoming=Array.isArray(data)?data:data.entries;if(!Array.isArray(incoming))throw Error();if(confirm(`Import ${incoming.length} entries? This replaces the current records.`)){entries=incoming.filter(e=>e&&e.id&&e.date);save()}}catch{alert('That file does not look like a HAZE backup.')}ev.target.value=''});
+ $('clearBtn').addEventListener('click',()=>{if(confirm('Delete ALL HAZE entries from this browser? Export a backup first if you may need them.')){entries=[];localStorage.removeItem(KEY);resetForm();render()}});
+ $('date').value=todayISO();$('time').value=localTime();load();render();
+})();
+</script>
+</body>
+</html>
